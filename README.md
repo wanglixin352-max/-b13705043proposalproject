@@ -32,6 +32,7 @@ Heap（Priority Queue） 用於實現任務優先排序，是本專題核心 Lin
 ## Prototype Report
 
 ### 目前進度
+目前
 <!-- 完成了什麼 -->
 
 ### 遇到的困難
