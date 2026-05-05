@@ -100,8 +100,72 @@ Linked List 與 Heap 的角色分工需要重新設計
 改善 CLI 使用體驗
 或嘗試簡單 GUI（如 Tkinter）
 
-### 與課程的關聯
-<!-- 到目前為止，你的實作中哪些部分與課程內容有關？關係是什麼？ -->
+### 程式碼
+import heapq
+from datetime import datetime
+
+class Task:
+    def __init__(self, name, deadline, priority):
+        self.name = name
+        # deadline 格式：'2026-05-10 23:59'
+        self.deadline = datetime.strptime(deadline, "%Y-%m-%d %H:%M")
+        self.priority = priority  # 數字越小代表越重要
+
+    def __lt__(self, other):
+        # 先比 priority，再比 deadline
+        if self.priority == other.priority:
+            return self.deadline < other.deadline
+        return self.priority < other.priority
+
+    def __repr__(self):
+        return f"{self.name} | Priority: {self.priority} | Due: {self.deadline}"
+
+
+class TaskManager:
+    def __init__(self):
+        self.heap = []
+
+    def add_task(self, task):
+        heapq.heappush(self.heap, task)
+
+    def remove_top_task(self):
+        if self.heap:
+            return heapq.heappop(self.heap)
+        return None
+
+    def show_tasks(self):
+        # 不破壞 heap，顯示排序後結果
+        sorted_tasks = sorted(self.heap)
+        for t in sorted_tasks:
+            print(t)
+
+    def find_today_tasks(self):
+        today = datetime.now().date()
+        return [t for t in self.heap if t.deadline.date() == today]
+
+
+# ====== 測試 ======
+if __name__ == "__main__":
+    manager = TaskManager()
+
+    manager.add_task(Task("DS 作業", "2026-05-06 23:59", 1))
+    manager.add_task(Task("買晚餐", "2026-05-05 18:00", 3))
+    manager.add_task(Task("寫報告", "2026-05-05 20:00", 2))
+
+    print("=== 所有任務（排序後）===")
+    manager.show_tasks()
+
+    print("\n=== 今日任務 ===")
+    today_tasks = manager.find_today_tasks()
+    for t in today_tasks:
+        print(t)
+
+    print("\n=== 完成一個任務 ===")
+    done = manager.remove_top_task()
+    print("完成：", done)
+
+    print("\n=== 剩餘任務 ===")
+    manager.show_tasks()
 
 ---
 
